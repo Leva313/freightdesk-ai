@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "ChemTrans Sp. z o.o.",
+    "contact_person": "Katarzyna Wiśniewska",
+    "email": "k.wisniewska@chemtrans-poznan.pl",
+    "phone": "+48 61 222 41 90"
+  },
+  "pickup": {
+    "company": "ChemTrans Sp. z o.o.",
+    "address": "ul. Gdyńska 31",
+    "postal_code": "61-016",
+    "city": "Poznań",
+    "country": "PL",
+    "date_from": "2026-10-19",
+    "date_to": "2026-10-19",
+    "time_window": "07:00-13:00",
+    "reference": null
+  },
+  "delivery": {
+    "company": "Colorificio Lombardo S.p.A.",
+    "address": "Via dell'Industria 18",
+    "postal_code": "20037",
+    "city": "Paderno Dugnano",
+    "country": "IT",
+    "date_from": "2026-10-21",
+    "date_to": "2026-10-21",
+    "time_window": null,
+    "reference": null
+  },
+  "cargo": {
+    "description": "Paints and thinners",
+    "weight_kg": 9400.0,
+    "pallets": 12,
+    "pallet_type": "Industrial 120x100",
+    "loading_meters": null,
+    "volume_m3": null,
+    "stackable": null,
+    "adr": true,
+    "adr_class": "3",
+    "un_number": "UN 1263",
+    "temperature_controlled": false,
+    "temp_min_c": null,
+    "temp_max_c": null
+  },
+  "vehicle_type": "ADR-equipped truck",
+  "price": 2100.0,
+  "currency": "EUR",
+  "customer_reference": "CT/10/2026/118",
+  "notes": "Packing group II. Driver must hold an ADR certificate.",
+  "language": "pl",
+  "clarification_email": null
+}

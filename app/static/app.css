@@ -1,0 +1,16 @@
+.badge { display: inline-flex; align-items: center; gap: .375rem; border-radius: 9999px; padding: .125rem .625rem; font-size: .75rem; font-weight: 500; white-space: nowrap; }
+.badge::before { content: ""; width: .375rem; height: .375rem; border-radius: 9999px; background: currentColor; }
+.badge-new { background: #eef2ff; color: #4338ca; }
+.badge-needs_info { background: #fffbeb; color: #b45309; }
+.badge-confirmed { background: #ecfdf5; color: #047857; }
+
+.field label { display: block; margin-bottom: .25rem; font-size: .75rem; font-weight: 500; color: #64748b; }
+.field input, .field select, .field textarea {
+  width: 100%; border-radius: .5rem; border: 1px solid #cbd5e1; background: #fff;
+  padding: .45rem .65rem; font-size: .875rem; color: #0f172a; transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgb(99 102 241 / .15); }
+.field.missing input, .field.missing select { border-color: #f59e0b; background: #fffbeb; }
+.field.missing label::after { content: " · missing"; color: #d97706; }
+
+.source-text { white-space: pre-wrap; word-break: break-word; }

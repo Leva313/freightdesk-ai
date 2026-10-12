@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "Van Dijk Logistics B.V.",
+    "contact_person": "Pieter de Boer",
+    "email": "planning@vandijk-logistics.nl",
+    "phone": "+31 10 555 2290"
+  },
+  "pickup": {
+    "company": "Van Dijk Logistics B.V. - Warehouse 3",
+    "address": "Waalhaven Oostzijde 85",
+    "postal_code": "3087 BM",
+    "city": "Rotterdam",
+    "country": "NL",
+    "date_from": "2026-10-20",
+    "date_to": "2026-10-20",
+    "time_window": "09:00-15:00",
+    "reference": "VDL-77310-L"
+  },
+  "delivery": {
+    "company": "Kaufland Ceska republika v.o.s. - DC Praha",
+    "address": "Belohorska 2428/203",
+    "postal_code": "169 00",
+    "city": "Praha",
+    "country": "CZ",
+    "date_from": "2026-10-22",
+    "date_to": "2026-10-22",
+    "time_window": "06:00-12:00",
+    "reference": "KCZ-PO-4481920"
+  },
+  "cargo": {
+    "description": "Consumer electronics (boxed TV sets)",
+    "weight_kg": 11250.0,
+    "pallets": 30,
+    "pallet_type": "EUR",
+    "loading_meters": 13.6,
+    "volume_m3": null,
+    "stackable": false,
+    "adr": false,
+    "adr_class": null,
+    "un_number": null,
+    "temperature_controlled": false,
+    "temp_min_c": null,
+    "temp_max_c": null
+  },
+  "vehicle_type": "Mega trailer 100 m³, curtainsider",
+  "price": 1780.0,
+  "currency": "EUR",
+  "customer_reference": "VDL-77310",
+  "notes": "Unloading slot booking required. Driver to call 1 hour before arrival. High-value goods: no unattended parking. Payment 30 days.",
+  "language": "en",
+  "clarification_email": null
+}

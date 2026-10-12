@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} · FreightDesk AI{% endblock %}
+
+{% macro field(path, label, value, type="text", span="", step=None) %}
+<div class="field {{ span }} {{ 'missing' if path in order.missing }}">
+  <label for="{{ path }}">{{ label }}</label>
+  <input id="{{ path }}" name="{{ path }}" type="{{ type }}" value="{{ '' if value is none else (value | num if type == 'number' else value) }}"{% if step %} step="{{ step }}"{% endif %}>
+</div>
+{% endmacro %}
+
+{% macro stop_fields(prefix, stop) %}
+{{ field(prefix ~ ".company", "Company", stop.company, span="sm:col-span-2") }}
+{{ field(prefix ~ ".address", "Street", stop.address, span="sm:col-span-2") }}
+{{ field(prefix ~ ".postal_code", "Postal code", stop.postal_code) }}
+{{ field(prefix ~ ".city", "City", stop.city) }}
+{{ field(prefix ~ ".country", "Country (ISO)", stop.country) }}
+{{ field(prefix ~ ".reference", "Reference", stop.reference) }}
+{{ field(prefix ~ ".date_from", "Date from", stop.date_from, type="date") }}
+{{ field(prefix ~ ".date_to", "Date to", stop.date_to, type="date") }}
+{{ field(prefix ~ ".time_window", "Time window", stop.time_window, span="sm:col-span-2") }}
+{% endmacro %}
+
+{% block content %}
+{% set d = order.data %}
+<a href="/" class="text-sm text-slate-500 hover:text-slate-800">← All orders</a>
+
+<div class="mt-3 flex flex-wrap items-start justify-between gap-4">
+  <div>
+    <div class="flex items-center gap-3">
+      <h1 class="text-2xl font-semibold tracking-tight text-slate-900">{{ order.route }}</h1>
+      <span class="badge badge-{{ order.status }}">{{ status_label[order.status] }}</span>
+    </div>
+    <p class="mt-1 text-sm text-slate-500">
+      Order #{{ order.id }} · from {{ order.source_kind }} “{{ order.source_name }}” · language {{ d.language | upper }} · received {{ order.created_at.strftime("%d %b %Y %H:%M") }}
+    </p>
+  </div>
+  <form method="post" action="/orders/{{ order.id }}/delete" onsubmit="return confirm('Delete this order?')">
+    <button class="rounded-lg px-3 py-2 text-sm text-slate-500 hover:bg-red-50 hover:text-red-600">Delete</button>
+  </form>
+</div>
+
+{% if error %}<div class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ error }}</div>{% endif %}
+{% if saved and not error %}<div class="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">Saved.</div>{% endif %}
+
+<div class="mt-6 grid gap-6 lg:grid-cols-5">
+  <section class="space-y-6 lg:col-span-2">
+    {% if order.missing %}
+    <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+      <h2 class="text-sm font-semibold text-amber-900">Missing before booking</h2>
+      <ul class="mt-2 flex flex-wrap gap-1.5">
+        {% for path in order.missing %}<li class="rounded-md bg-white px-2 py-0.5 text-xs font-medium text-amber-800 ring-1 ring-amber-200">{{ field_label(path) }}</li>{% endfor %}
+      </ul>
+      {% if d.clarification_email %}
+      <div class="mt-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-amber-900">Draft reply to customer</h3>
+          <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('reply').innerText); this.textContent='Copied'" class="rounded-md bg-white px-2 py-1 text-xs font-medium text-amber-800 ring-1 ring-amber-200 hover:bg-amber-100">Copy</button>
+        </div>
+        <p id="reply" class="source-text mt-2 rounded-lg bg-white p-3 text-sm text-slate-700 ring-1 ring-amber-200">{{ d.clarification_email }}</p>
+        {% if d.customer.email %}
+        <a href="mailto:{{ d.customer.email }}?subject={{ ('Re: ' ~ (d.customer_reference or 'your transport request')) | urlencode }}&body={{ d.clarification_email | urlencode }}"
+           class="mt-2 inline-block text-xs font-medium text-amber-800 underline">Open in email client</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <h2 class="border-b border-slate-200 px-5 py-3 text-sm font-semibold text-slate-900">Original request</h2>
+      {% if order.source_text %}
+      <pre class="source-text max-h-[32rem] overflow-y-auto p-5 font-sans text-sm leading-relaxed text-slate-700">{{ order.source_text }}</pre>
+      {% elif order.source_kind == "image" %}
+      <img src="/orders/{{ order.id }}/source" alt="Uploaded request" class="w-full">
+      {% elif order.source_kind == "pdf" %}
+      <iframe src="/orders/{{ order.id }}/source" title="Uploaded PDF" class="h-[36rem] w-full"></iframe>
+      {% endif %}
+    </div>
+  </section>
+
+  <form method="post" action="/orders/{{ order.id }}" class="space-y-6 lg:col-span-3">
+    <fieldset class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <legend class="float-left mb-3 w-full text-sm font-semibold text-slate-900">Customer</legend>
+      <div class="clear-both grid gap-3 sm:grid-cols-2">
+        {{ field("customer.company", "Company", d.customer.company) }}
+        {{ field("customer.contact_person", "Contact person", d.customer.contact_person) }}
+        {{ field("customer.email", "Email", d.customer.email, type="email") }}
+        {{ field("customer.phone", "Phone", d.customer.phone) }}
+        {{ field("customer_reference", "Customer reference", d.customer_reference) }}
+      </div>
+    </fieldset>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+      <fieldset class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <legend class="float-left mb-3 w-full text-sm font-semibold text-slate-900">Pickup</legend>
+        <div class="clear-both grid gap-3 sm:grid-cols-2">{{ stop_fields("pickup", d.pickup) }}</div>
+      </fieldset>
+      <fieldset class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <legend class="float-left mb-3 w-full text-sm font-semibold text-slate-900">Delivery</legend>
+        <div class="clear-both grid gap-3 sm:grid-cols-2">{{ stop_fields("delivery", d.delivery) }}</div>
+      </fieldset>
+    </div>
+
+    <fieldset class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <legend class="float-left mb-3 w-full text-sm font-semibold text-slate-900">Cargo</legend>
+      <div class="clear-both grid gap-3 sm:grid-cols-4">
+        {{ field("cargo.description", "Description", d.cargo.description, span="sm:col-span-4") }}
+        {{ field("cargo.weight_kg", "Weight, kg", d.cargo.weight_kg, type="number", step="any") }}
+        {{ field("cargo.pallets", "Pallets", d.cargo.pallets, type="number", step="1") }}
+        {{ field("cargo.pallet_type", "Pallet type", d.cargo.pallet_type) }}
+        {{ field("cargo.loading_meters", "Loading meters", d.cargo.loading_meters, type="number", step="any") }}
+        {{ field("cargo.volume_m3", "Volume, m³", d.cargo.volume_m3, type="number", step="any") }}
+        <div class="field">
+          <label for="cargo.stackable">Stackable</label>
+          <select id="cargo.stackable" name="cargo.stackable">
+            <option value="" {{ "selected" if d.cargo.stackable is none }}>Unknown</option>
+            <option value="yes" {{ "selected" if d.cargo.stackable == true }}>Yes</option>
+            <option value="no" {{ "selected" if d.cargo.stackable == false }}>No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4 grid gap-3 rounded-lg bg-slate-50 p-4 sm:grid-cols-4">
+        <label class="flex items-center gap-2 text-sm font-medium text-slate-700 sm:col-span-4">
+          <input type="checkbox" name="cargo.adr" class="h-4 w-4 rounded border-slate-300 text-orange-600" {{ "checked" if d.cargo.adr }}>
+          Dangerous goods (ADR)
+        </label>
+        {{ field("cargo.adr_class", "ADR class", d.cargo.adr_class, span="sm:col-span-2") }}
+        {{ field("cargo.un_number", "UN number", d.cargo.un_number, span="sm:col-span-2") }}
+        <label class="mt-2 flex items-center gap-2 text-sm font-medium text-slate-700 sm:col-span-4">
+          <input type="checkbox" name="cargo.temperature_controlled" class="h-4 w-4 rounded border-slate-300 text-sky-600" {{ "checked" if d.cargo.temperature_controlled }}>
+          Temperature controlled
+        </label>
+        {{ field("cargo.temp_min_c", "Min °C", d.cargo.temp_min_c, type="number", step="any", span="sm:col-span-2") }}
+        {{ field("cargo.temp_max_c", "Max °C", d.cargo.temp_max_c, type="number", step="any", span="sm:col-span-2") }}
+      </div>
+    </fieldset>
+
+    <fieldset class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <legend class="float-left mb-3 w-full text-sm font-semibold text-slate-900">Transport</legend>
+      <div class="clear-both grid gap-3 sm:grid-cols-4">
+        {{ field("vehicle_type", "Vehicle", d.vehicle_type, span="sm:col-span-2") }}
+        {{ field("price", "Price", d.price, type="number", step="any") }}
+        {{ field("currency", "Currency", d.currency) }}
+        <div class="field sm:col-span-4">
+          <label for="notes">Notes</label>
+          <textarea id="notes" name="notes" rows="3">{{ d.notes or "" }}</textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="sticky bottom-0 -mx-1 flex justify-end gap-3 rounded-xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm backdrop-blur">
+      <button name="action" value="save" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Save changes</button>
+      <button name="action" value="confirm" class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-500">
+        {{ "Save confirmed order" if order.status == "confirmed" else "Confirm order" }}
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

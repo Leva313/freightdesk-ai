@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "SIA BaltTrade",
+    "contact_person": "Дмитрий Орлов",
+    "email": "orlov@balttrade.lv",
+    "phone": "+371 2 555 8123"
+  },
+  "pickup": {
+    "company": "SIA BaltTrade",
+    "address": "Krasta iela 52",
+    "postal_code": "LV-1003",
+    "city": "Rīga",
+    "country": "LV",
+    "date_from": null,
+    "date_to": null,
+    "time_window": null,
+    "reference": null
+  },
+  "delivery": {
+    "company": "Logistyka Mazowsze",
+    "address": "ul. Annopol 4A",
+    "postal_code": "03-236",
+    "city": "Warszawa",
+    "country": "PL",
+    "date_from": null,
+    "date_to": null,
+    "time_window": null,
+    "reference": null
+  },
+  "cargo": {
+    "description": "Boxed furniture",
+    "weight_kg": null,
+    "pallets": 26,
+    "pallet_type": null,
+    "loading_meters": null,
+    "volume_m3": null,
+    "stackable": true,
+    "adr": false,
+    "adr_class": null,
+    "un_number": null,
+    "temperature_controlled": false,
+    "temp_min_c": null,
+    "temp_max_c": null
+  },
+  "vehicle_type": "Tautliner 13.6 m",
+  "price": null,
+  "currency": null,
+  "customer_reference": null,
+  "notes": "Customer expects loading next week and asks us to quote a rate.",
+  "language": "ru",
+  "clarification_email": "Добрый день, Дмитрий!\n\nСпасибо за запрос на перевозку Рига – Варшава. Чтобы забронировать машину и рассчитать ставку, пожалуйста, уточните:\n\n1. Точную дату (или диапазон дат) загрузки в Риге.\n2. Общий вес груза брутто, кг.\n\nКак только получим эти данные, сразу пришлём предложение.\n\nС уважением,\nFreightDesk dispatch"
+}

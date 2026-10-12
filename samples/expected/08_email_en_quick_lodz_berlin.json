@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "QuickShip",
+    "contact_person": "Mark Weber",
+    "email": "mark@quickship-lodz.pl",
+    "phone": null
+  },
+  "pickup": {
+    "company": null,
+    "address": null,
+    "postal_code": null,
+    "city": "Łódź",
+    "country": "PL",
+    "date_from": "2026-10-13",
+    "date_to": "2026-10-13",
+    "time_window": null,
+    "reference": null
+  },
+  "delivery": {
+    "company": null,
+    "address": null,
+    "postal_code": null,
+    "city": "Berlin",
+    "country": "DE",
+    "date_from": null,
+    "date_to": null,
+    "time_window": null,
+    "reference": null
+  },
+  "cargo": {
+    "description": null,
+    "weight_kg": null,
+    "pallets": 10,
+    "pallet_type": null,
+    "loading_meters": null,
+    "volume_m3": null,
+    "stackable": null,
+    "adr": false,
+    "adr_class": null,
+    "un_number": null,
+    "temperature_controlled": false,
+    "temp_min_c": null,
+    "temp_max_c": null
+  },
+  "vehicle_type": null,
+  "price": null,
+  "currency": null,
+  "customer_reference": null,
+  "notes": "Customer asks for a price.",
+  "language": "en",
+  "clarification_email": "Hi Mark,\n\nThanks for your request - we can look at a truck from Łódź to Berlin for tomorrow. To confirm and send you a price, please let us know:\n\n1. What goods are on the 10 pallets?\n2. The total gross weight in kg.\n\nPickup and delivery addresses with opening hours would also help us plan the truck.\n\nBest regards,\nFreightDesk dispatch"
+}

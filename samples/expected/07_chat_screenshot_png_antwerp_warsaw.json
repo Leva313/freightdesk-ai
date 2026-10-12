@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "AutoParts Trading Sp. z o.o.",
+    "contact_person": "Tomasz",
+    "email": null,
+    "phone": "+32 470 55 12 34"
+  },
+  "pickup": {
+    "company": "DP World Antwerp Gateway",
+    "address": "Scheldelaan 450",
+    "postal_code": "2040",
+    "city": "Antwerpen",
+    "country": "BE",
+    "date_from": "2026-10-15",
+    "date_to": "2026-10-15",
+    "time_window": "10:00-16:00",
+    "reference": "MSKU 4471932"
+  },
+  "delivery": {
+    "company": "AutoParts Trading Sp. z o.o.",
+    "address": "ul. Marywilska 34",
+    "postal_code": "03-228",
+    "city": "Warszawa",
+    "country": "PL",
+    "date_from": "2026-10-19",
+    "date_to": "2026-10-19",
+    "time_window": "morning",
+    "reference": null
+  },
+  "cargo": {
+    "description": "Auto parts (brake discs)",
+    "weight_kg": 14000.0,
+    "pallets": 18,
+    "pallet_type": null,
+    "loading_meters": null,
+    "volume_m3": null,
+    "stackable": null,
+    "adr": false,
+    "adr_class": null,
+    "un_number": null,
+    "temperature_controlled": false,
+    "temp_min_c": null,
+    "temp_max_c": null
+  },
+  "vehicle_type": "Tautliner",
+  "price": null,
+  "currency": null,
+  "customer_reference": null,
+  "notes": "Pickup from container terminal, container MSKU 4471932. Weight given as approximately 14 t.",
+  "language": "en",
+  "clarification_email": null
+}

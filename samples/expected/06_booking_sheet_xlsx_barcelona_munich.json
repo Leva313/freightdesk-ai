@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "Agrícola Mediterránea S.L.",
+    "contact_person": "Laura Martínez",
+    "email": "l.martinez@agromed.es",
+    "phone": "+34 93 555 7781"
+  },
+  "pickup": {
+    "company": "Mercabarna",
+    "address": "Carrer Longitudinal 6",
+    "postal_code": "08040",
+    "city": "Barcelona",
+    "country": "ES",
+    "date_from": "2026-10-13",
+    "date_to": "2026-10-13",
+    "time_window": "14:00-20:00",
+    "reference": null
+  },
+  "delivery": {
+    "company": "Großmarkthalle München",
+    "address": "Schäftlarnstraße 10",
+    "postal_code": "81371",
+    "city": "München",
+    "country": "DE",
+    "date_from": "2026-10-15",
+    "date_to": "2026-10-15",
+    "time_window": "04:00-08:00",
+    "reference": null
+  },
+  "cargo": {
+    "description": "Fresh citrus fruit (oranges, mandarins)",
+    "weight_kg": 21500.0,
+    "pallets": 33,
+    "pallet_type": "EUR",
+    "loading_meters": null,
+    "volume_m3": null,
+    "stackable": null,
+    "adr": false,
+    "adr_class": null,
+    "un_number": null,
+    "temperature_controlled": true,
+    "temp_min_c": 4.0,
+    "temp_max_c": 8.0
+  },
+  "vehicle_type": "Reefer 13.6 m",
+  "price": 2650.0,
+  "currency": "EUR",
+  "customer_reference": "AGM-5521",
+  "notes": null,
+  "language": "en",
+  "clarification_email": null
+}

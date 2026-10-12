@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "Nordfrisch Molkerei GmbH",
+    "contact_person": "Jan Petersen",
+    "email": "dispo@nordfrisch-hamburg.de",
+    "phone": "+49 40 7899 3310"
+  },
+  "pickup": {
+    "company": "Nordfrisch Molkerei GmbH",
+    "address": "Billbrookdeich 210",
+    "postal_code": "22113",
+    "city": "Hamburg",
+    "country": "DE",
+    "date_from": "2026-10-15",
+    "date_to": "2026-10-15",
+    "time_window": "06:00-10:00",
+    "reference": null
+  },
+  "delivery": {
+    "company": "Merkur Zentrallager",
+    "address": "Industriezentrum NÖ-Süd Straße 3",
+    "postal_code": "2355",
+    "city": "Wiener Neudorf",
+    "country": "AT",
+    "date_from": "2026-10-16",
+    "date_to": "2026-10-16",
+    "time_window": "from 05:00",
+    "reference": null
+  },
+  "cargo": {
+    "description": "Dairy products (yoghurt, quark)",
+    "weight_kg": 19800.0,
+    "pallets": 33,
+    "pallet_type": "EUR",
+    "loading_meters": null,
+    "volume_m3": null,
+    "stackable": false,
+    "adr": false,
+    "adr_class": null,
+    "un_number": null,
+    "temperature_controlled": true,
+    "temp_min_c": 2.0,
+    "temp_max_c": 6.0
+  },
+  "vehicle_type": "Reefer semi-trailer",
+  "price": null,
+  "currency": null,
+  "customer_reference": "NF-2026-1042",
+  "notes": "Temperature recorder required. Customer wants a freight quote today by 16:00.",
+  "language": "de",
+  "clarification_email": null
+}

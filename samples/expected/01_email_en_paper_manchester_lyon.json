@@ -1,0 +1,52 @@
+{
+  "customer": {
+    "company": "Northwood Paper Ltd",
+    "contact_person": "Sarah Collins",
+    "email": "s.collins@northwood-paper.co.uk",
+    "phone": "+44 161 555 0142"
+  },
+  "pickup": {
+    "company": "Northwood Paper Ltd",
+    "address": "Unit 4 Trafford Park Road",
+    "postal_code": "M17 1HG",
+    "city": "Manchester",
+    "country": "GB",
+    "date_from": "2026-10-14",
+    "date_to": "2026-10-14",
+    "time_window": "08:00-12:00",
+    "reference": "NWP-88412"
+  },
+  "delivery": {
+    "company": "Imprimerie Rhone SAS",
+    "address": "22 Rue de la Soie",
+    "postal_code": "69100",
+    "city": "Villeurbanne",
+    "country": "FR",
+    "date_from": "2026-10-16",
+    "date_to": "2026-10-16",
+    "time_window": "before 15:00",
+    "reference": null
+  },
+  "cargo": {
+    "description": "Coated paper rolls",
+    "weight_kg": 18600.0,
+    "pallets": 24,
+    "pallet_type": "EUR",
+    "loading_meters": null,
+    "volume_m3": null,
+    "stackable": false,
+    "adr": false,
+    "adr_class": null,
+    "un_number": null,
+    "temperature_controlled": false,
+    "temp_min_c": null,
+    "temp_max_c": null
+  },
+  "vehicle_type": "Tautliner 13.6 m, side loading",
+  "price": 2350.0,
+  "currency": "EUR",
+  "customer_reference": "NWP-88412",
+  "notes": "Budget is all-in including Channel crossing.",
+  "language": "en",
+  "clarification_email": null
+}
