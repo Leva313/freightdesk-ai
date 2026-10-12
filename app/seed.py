@@ -7,14 +7,27 @@
 from __future__ import annotations
 
 import argparse
+import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-from . import db, extractor, service
-from .main import sample_files
+from . import db, documents, extractor, service
+
+SAMPLE_INPUTS = extractor.SAMPLES_DIR / "inputs"
 
 # Shown as already confirmed by a dispatcher, so the demo dashboard has every status.
 PRECONFIRMED = {"01_email_en_paper_manchester_lyon", "05_transport_order_pdf_rotterdam_prague"}
+
+
+def sample_files() -> list[Path]:
+    return sorted(p for p in SAMPLE_INPUTS.iterdir() if p.suffix.lower() in documents.ACCEPTED_SUFFIXES)
+
+
+def seed_on_start() -> None:
+    """Fill an empty database at startup when FREIGHTDESK_SEED_ON_START=1 (used by the hosted demo)."""
+    if os.getenv("FREIGHTDESK_SEED_ON_START") == "1":
+        seed()
 
 
 def seed(reset: bool = False) -> int:

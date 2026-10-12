@@ -1,0 +1,18 @@
+# Render Blueprint for the public demo: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: freightdesk-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      # Always demo mode: visitors explore the sample requests, no API calls are made.
+      - key: FREIGHTDESK_DEMO
+        value: "1"
+      - key: FREIGHTDESK_SEED_ON_START
+        value: "1"

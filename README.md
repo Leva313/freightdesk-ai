@@ -65,6 +65,14 @@ Open http://localhost:8000.
 requests (`samples/inputs`) with pre-extracted results (`samples/expected`), so you can explore
 the whole workflow without an API key. Add a key to process your own documents with Claude.
 
+## Deploy a public demo
+
+`render.yaml` deploys the app to [Render](https://render.com) as a free web service: create a
+new Blueprint from this repository and Render picks up the settings. The hosted demo runs with
+`FREIGHTDESK_DEMO=1` (always demo mode, even if a key is set, so visitors can never trigger paid
+API calls) and `FREIGHTDESK_SEED_ON_START=1` (an empty database is filled with the sample orders
+on startup, so the demo resets itself after every restart).
+
 ## Samples
 
 | Request | Format | Language | Notes |
@@ -99,6 +107,8 @@ upload → edit → confirm → export flow, and the Claude request shape (with 
 | `CLAUDE_MODEL` | `claude-opus-5-5` | Model used for extraction |
 | `CLAUDE_EFFORT` | `medium` | Reasoning effort: `low` is cheaper and faster for simple emails |
 | `FREIGHTDESK_DATA` | `./data` | Where the SQLite database and uploads are stored |
+| `FREIGHTDESK_DEMO` | empty | `1` forces demo mode (hosted demo) |
+| `FREIGHTDESK_SEED_ON_START` | empty | `1` loads the sample orders into an empty database at startup |
 
 ## Ideas for production
 

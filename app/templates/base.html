@@ -29,8 +29,14 @@
     {% if not is_live() %}
     <div class="border-t border-amber-200 bg-amber-50">
       <p class="mx-auto max-w-7xl px-4 py-2 text-xs text-amber-800 sm:px-6">
+        {% if is_public_demo() %}
+        <strong class="font-semibold">Live demo.</strong>
+        Eight real-world sample requests with pre-extracted results. Open an order, edit it, confirm it or export to Excel; changes reset when the demo restarts.
+        <a href="https://github.com/Leva313/freightdesk-ai" class="font-medium underline">Source code</a>
+        {% else %}
         <strong class="font-semibold">Demo mode.</strong>
         Sample requests are pre-extracted. Add <code class="rounded bg-amber-100 px-1">ANTHROPIC_API_KEY</code> to <code class="rounded bg-amber-100 px-1">.env</code> to process your own documents with Claude.
+        {% endif %}
       </p>
     </div>
     {% endif %}

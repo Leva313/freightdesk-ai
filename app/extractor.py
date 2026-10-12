@@ -55,8 +55,13 @@ class DemoModeError(ExtractionError):
     pass
 
 
+def is_public_demo() -> bool:
+    """Hosted demo: always demo mode, even if a key is present in the environment."""
+    return os.getenv("FREIGHTDESK_DEMO") == "1"
+
+
 def is_live() -> bool:
-    return bool(os.getenv("ANTHROPIC_API_KEY")) and os.getenv("FREIGHTDESK_DEMO") != "1"
+    return bool(os.getenv("ANTHROPIC_API_KEY")) and not is_public_demo()
 
 
 def fingerprint(data: bytes) -> str:
@@ -113,10 +118,12 @@ def _demo_extract(raw: bytes) -> FreightOrder:
         if sample.is_file() and fingerprint(sample.read_bytes()) == digest:
             expected = SAMPLES_DIR / "expected" / f"{sample.stem}.json"
             return FreightOrder.model_validate_json(expected.read_text(encoding="utf-8"))
-    raise DemoModeError(
-        "Demo mode only processes the bundled sample requests. "
-        "Add ANTHROPIC_API_KEY to .env to process your own documents."
+    hint = (
+        "This public demo runs on pre-extracted sample requests, so uploading your own documents is disabled."
+        if is_public_demo()
+        else "Add ANTHROPIC_API_KEY to .env to process your own documents."
     )
+    raise DemoModeError("Demo mode only processes the bundled sample requests. " + hint)
 
 
 def label(path: str) -> str:

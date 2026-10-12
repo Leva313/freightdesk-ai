@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -16,24 +17,29 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 from fastapi.templating import Jinja2Templates  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 
-from . import db, documents, extractor, service  # noqa: E402
+from . import db, documents, extractor, seed, service  # noqa: E402
 from .schema import FIELD_LABELS, FreightOrder, missing_fields  # noqa: E402
 
 BASE_DIR = Path(__file__).resolve().parent
-SAMPLE_INPUTS = BASE_DIR.parent / "samples" / "inputs"
 
-app = FastAPI(title="FreightDesk AI")
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    seed.seed_on_start()
+    yield
+
+
+app = FastAPI(title="FreightDesk AI", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
-templates.env.globals.update(field_label=extractor.label, is_live=extractor.is_live, model=extractor.MODEL)
+templates.env.globals.update(
+    field_label=extractor.label, is_live=extractor.is_live, is_public_demo=extractor.is_public_demo, model=extractor.MODEL
+)
 
 STATUS_LABELS = {"new": "Ready to book", "needs_info": "Needs info", "confirmed": "Confirmed"}
 templates.env.globals["status_label"] = STATUS_LABELS
 templates.env.filters["num"] = lambda value: f"{value:f}".rstrip("0").rstrip(".")
-
-
-def sample_files() -> list[Path]:
-    return sorted(p for p in SAMPLE_INPUTS.iterdir() if p.suffix.lower() in documents.ACCEPTED_SUFFIXES)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -50,7 +56,7 @@ def new_order(request: Request, error: str | None = None):
     return templates.TemplateResponse(
         request,
         "new.html",
-        {"samples": sample_files(), "error": error, "accepted": ",".join(documents.ACCEPTED_SUFFIXES)},
+        {"samples": seed.sample_files(), "error": error, "accepted": ",".join(documents.ACCEPTED_SUFFIXES)},
     )
 
 
@@ -70,8 +76,8 @@ async def create_order(request: Request, text: str = Form(""), file: UploadFile 
 
 @app.post("/samples/{name}")
 def load_sample(request: Request, name: str):
-    path = SAMPLE_INPUTS / name
-    if path not in sample_files():
+    path = seed.SAMPLE_INPUTS / name
+    if path not in seed.sample_files():
         raise HTTPException(404)
     try:
         order_id = service.ingest_upload(path.name, path.read_bytes())

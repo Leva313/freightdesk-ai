@@ -135,3 +135,18 @@ def test_live_extraction_sends_document_and_parses_result(monkeypatch):
     assert calls["output_format"] is FreightOrder
     assert calls["messages"][0]["content"][0]["type"] == "document"
     assert "2026-10-12" in calls["messages"][0]["content"][-1]["text"]
+
+
+def test_hosted_demo_seeds_on_start_and_never_calls_the_api(monkeypatch):
+    from app.main import app
+
+    monkeypatch.setenv("FREIGHTDESK_SEED_ON_START", "1")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-should-not-be-used")
+    assert not extractor.is_live()
+
+    with TestClient(app) as client:  # runs the lifespan startup
+        assert len(db.list_orders()) == len(list(SAMPLES.iterdir()))
+        assert "Live demo." in client.get("/").text
+        response = client.post("/orders", data={"text": "Need a truck Paris to Madrid tomorrow"})
+        assert "uploading your own documents is disabled" in response.text
+    assert len(db.list_orders()) == len(list(SAMPLES.iterdir()))
