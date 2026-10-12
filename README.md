@@ -4,6 +4,9 @@ An AI intake agent for road freight dispatchers. It turns transport requests tha
 emails, PDF transport orders, Excel booking sheets or phone screenshots, in any language,
 into structured orders a dispatcher can check and book in one click.
 
+**Live demo: [freightdesk-ai.onrender.com](https://freightdesk-ai.onrender.com)** (runs on sample
+requests; the free server may take up to a minute to wake up on the first visit)
+
 ![Dashboard](docs/dashboard.png)
 
 ## The problem
