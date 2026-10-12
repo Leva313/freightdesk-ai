@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .routing import Route
 from .schema import FreightOrder, missing_fields
 
 DATA_DIR = Path(os.getenv("FREIGHTDESK_DATA", Path(__file__).resolve().parent.parent / "data"))
@@ -29,7 +30,9 @@ CREATE TABLE IF NOT EXISTS orders (
     source_text TEXT,
     status TEXT NOT NULL,
     data TEXT NOT NULL,
-    demo INTEGER NOT NULL DEFAULT 0
+    demo INTEGER NOT NULL DEFAULT 0,
+    route TEXT,
+    route_error TEXT
 );
 """
 
@@ -46,13 +49,15 @@ class Order:
     status: str
     data: FreightOrder
     demo: bool
+    route: Route | None = None
+    route_error: str | None = None
 
     @property
     def missing(self) -> list[str]:
         return missing_fields(self.data)
 
     @property
-    def route(self) -> str:
+    def lane(self) -> str:
         def place(stop):
             return ", ".join(part for part in (stop.city, stop.country) if part) or "?"
 
@@ -66,6 +71,10 @@ def connect():
     conn.row_factory = sqlite3.Row
     try:
         conn.executescript(SCHEMA)
+        columns = {row["name"] for row in conn.execute("PRAGMA table_info(orders)")}
+        for column in ("route", "route_error"):
+            if column not in columns:  # databases created before routing existed
+                conn.execute(f"ALTER TABLE orders ADD COLUMN {column} TEXT")
         yield conn
         conn.commit()
     finally:
@@ -88,6 +97,8 @@ def _row_to_order(row: sqlite3.Row) -> Order:
         status=row["status"],
         data=FreightOrder.model_validate_json(row["data"]),
         demo=bool(row["demo"]),
+        route=Route.from_json(row["route"]) if row["route"] else None,
+        route_error=row["route_error"],
     )
 
 
@@ -148,6 +159,14 @@ def update_order(order_id: int, data: FreightOrder, status: str | None = None) -
         conn.execute(
             "UPDATE orders SET data = ?, status = ?, updated_at = ? WHERE id = ?",
             (data.model_dump_json(), status, _now(), order_id),
+        )
+
+
+def set_route(order_id: int, route: Route | None, error: str | None = None) -> None:
+    with connect() as conn:
+        conn.execute(
+            "UPDATE orders SET route = ?, route_error = ? WHERE id = ?",
+            (route.to_json() if route else None, error, order_id),
         )
 
 

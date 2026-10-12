@@ -31,6 +31,7 @@
           <th class="px-4 py-3">#</th>
           <th class="px-4 py-3">Route</th>
           <th class="px-4 py-3">Pickup</th>
+          <th class="px-4 py-3">Delivery ETA</th>
           <th class="px-4 py-3">Cargo</th>
           <th class="px-4 py-3">Customer</th>
           <th class="px-4 py-3">Source</th>
@@ -43,13 +44,20 @@
         <tr class="cursor-pointer hover:bg-slate-50" onclick="location.href='/orders/{{ order.id }}'">
           <td class="px-4 py-3 font-mono text-xs text-slate-400">{{ order.id }}</td>
           <td class="px-4 py-3 font-medium text-slate-900">
-            <a href="/orders/{{ order.id }}">{{ order.route }}</a>
+            <a href="/orders/{{ order.id }}">{{ order.lane }}</a>
             <div class="mt-1 flex gap-1">
               {% if c.adr %}<span class="rounded bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700">ADR</span>{% endif %}
               {% if c.temperature_controlled %}<span class="rounded bg-sky-100 px-1.5 py-0.5 text-[10px] font-semibold text-sky-700">TEMP</span>{% endif %}
             </div>
           </td>
           <td class="whitespace-nowrap px-4 py-3 text-slate-600">{{ order.data.pickup.date_from or "—" }}</td>
+          {% set plan = plans[order.id] %}
+          <td class="whitespace-nowrap px-4 py-3">
+            {% if plan and plan.arrival %}
+            <span class="eta eta-{{ plan.status }}">{{ {"on_time": "On time", "tight": "Tight", "late": "Late", "no_deadline": "No deadline"}[plan.status] }}</span>
+            <div class="mt-1 text-xs text-slate-400">{{ in_tz(plan.arrival, order.data.delivery.country) | when }}</div>
+            {% else %}<span class="text-slate-300">—</span>{% endif %}
+          </td>
           <td class="px-4 py-3 text-slate-600">
             {{ c.description or "—" }}
             <div class="text-xs text-slate-400">

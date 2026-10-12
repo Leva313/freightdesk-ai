@@ -20,6 +20,10 @@
 {{ field(prefix ~ ".time_window", "Time window", stop.time_window, span="sm:col-span-2") }}
 {% endmacro %}
 
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+{% endblock %}
+
 {% block content %}
 {% set d = order.data %}
 <a href="/" class="text-sm text-slate-500 hover:text-slate-800">← All orders</a>
@@ -27,7 +31,7 @@
 <div class="mt-3 flex flex-wrap items-start justify-between gap-4">
   <div>
     <div class="flex items-center gap-3">
-      <h1 class="text-2xl font-semibold tracking-tight text-slate-900">{{ order.route }}</h1>
+      <h1 class="text-2xl font-semibold tracking-tight text-slate-900">{{ order.lane }}</h1>
       <span class="badge badge-{{ order.status }}">{{ status_label[order.status] }}</span>
     </div>
     <p class="mt-1 text-sm text-slate-500">
@@ -41,6 +45,8 @@
 
 {% if error %}<div class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ error }}</div>{% endif %}
 {% if saved and not error %}<div class="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">Saved.</div>{% endif %}
+
+{% include "_route.html" %}
 
 <div class="mt-6 grid gap-6 lg:grid-cols-5">
   <section class="space-y-6 lg:col-span-2">

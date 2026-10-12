@@ -13,21 +13,6 @@ from app.schema import FreightOrder, missing_fields
 SAMPLES = extractor.SAMPLES_DIR / "inputs"
 
 
-@pytest.fixture(autouse=True)
-def isolated_data(tmp_path, monkeypatch):
-    monkeypatch.setattr(db, "DATA_DIR", tmp_path)
-    monkeypatch.setattr(db, "DB_PATH", tmp_path / "test.db")
-    monkeypatch.setattr(db, "UPLOADS_DIR", tmp_path / "uploads")
-    monkeypatch.setenv("FREIGHTDESK_DEMO", "1")
-
-
-@pytest.fixture
-def client():
-    from app.main import app
-
-    return TestClient(app)
-
-
 def load_expected(stem: str) -> FreightOrder:
     return FreightOrder.model_validate_json((extractor.SAMPLES_DIR / "expected" / f"{stem}.json").read_text())
 

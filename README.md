@@ -26,9 +26,16 @@ a third of them are missing something, which means another email and another wai
 - **Checks what is missing before booking.** Missing pickup date, weight, ADR class for dangerous
   goods, temperature for reefer loads, and so on. The order is flagged *Needs info* and the agent
   drafts a reply to the customer **in the customer's language**, asking for exactly those details.
+- **Plans the trip for a truck.** HERE truck routing (40 t, 4 m, ADR restrictions, predicted
+  traffic) gives distance and driving time; the app then applies EU driver rules (45 min break
+  after 4.5 h, 11 h rest after 9 h), Sunday truck bans, loading and unloading time, and checks the
+  result against the delivery window: **on time**, **tight** or **late**, with the full timeline
+  on a map. A late order is flagged before anyone promises the slot to the customer.
 - **Keeps a human in the loop.** The dispatcher sees the original request next to the extracted
   fields, fixes anything, and confirms. Nothing is booked automatically.
 - **Exports confirmed orders** to Excel, and exposes them as JSON at `/api/orders` for a TMS.
+
+![Route and schedule](docs/route.png)
 
 | Missing details: reply drafted in Russian | Order read from a chat screenshot |
 |---|---|
@@ -37,10 +44,10 @@ a third of them are missing something, which means another email and another wai
 ## How it works
 
 ```
-upload / paste ──► documents.py ──► extractor.py ──► schema check ──► SQLite ──► dashboard
-                   PDF → document     Claude API       required          orders     edit, confirm,
-                   image → image      structured       fields, ADR,                 export .xlsx
-                   xlsx → text        output           temperature
+upload / paste ──► documents.py ──► extractor.py ──► schema check ──► routing.py ──► schedule.py ──► dashboard
+                   PDF → document     Claude API       required          HERE geocode   EU driver rules,  edit, confirm,
+                   image → image      structured       fields, ADR,      + truck route  Sunday bans,      export .xlsx
+                   xlsx → text        output           temperature       with traffic   delivery window
                    eml → text         (Pydantic)
 ```
 
@@ -49,8 +56,11 @@ upload / paste ──► documents.py ──► extractor.py ──► schema ch
   no regex parsing of model text. PDFs and images are sent natively as document and image blocks.
 - **Deterministic validation on top.** Whether an order is bookable is decided by code
   (`schema.missing_fields`), not by the model, so status never depends on a model judgement call.
+- **Truck routing, then rules in code.** HERE returns the route and traffic-aware driving time;
+  `schedule.py` turns it into a realistic trip (breaks, daily rests, bans, waiting for the slot).
+  It is a planning estimate, not a tachograph calculation, and says so in the UI.
 - **Prompt caching** on the system prompt and a server-side refusal fallback are enabled.
-- **Stack:** Python 3.12, FastAPI, Jinja2 + Tailwind, SQLite, openpyxl, Anthropic Python SDK.
+- **Stack:** Python 3.12, FastAPI, Jinja2 + Tailwind, Leaflet, SQLite, openpyxl, Anthropic Python SDK, HERE APIs.
 
 ## Run it
 
@@ -90,7 +100,9 @@ on startup, so the demo resets itself after every restart).
 | Łódź → Berlin | one-line email | EN | missing cargo and weight |
 
 Regenerate the PDF, spreadsheet and screenshot with `python samples/make_samples.py`
-(needs `requirements-dev.txt`).
+(needs `requirements-dev.txt`). `python samples/make_routes.py` recomputes the stored sample
+routes: with `HERE_API_KEY` set they come from HERE truck routing, otherwise from OpenStreetMap
+(Nominatim + OSRM) with truck time estimated from distance, which is what the demo ships with.
 
 ## Tests
 
@@ -100,13 +112,15 @@ pytest
 ```
 
 Covers document conversion for every format, the missing-field rules, the full
-upload → edit → confirm → export flow, and the Claude request shape (with the API mocked).
+upload → edit → confirm → export flow, EU driving rules and Sunday bans, and the Claude and
+HERE request shapes (with both APIs mocked).
 
 ## Configuration
 
 | Variable | Default | Purpose |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | empty | Enables live extraction; demo mode when empty |
+| `HERE_API_KEY` | empty | Live truck routes with traffic; stored sample routes when empty |
 | `CLAUDE_MODEL` | `claude-opus-5-5` | Model used for extraction |
 | `CLAUDE_EFFORT` | `medium` | Reasoning effort: `low` is cheaper and faster for simple emails |
 | `FREIGHTDESK_DATA` | `./data` | Where the SQLite database and uploads are stored |

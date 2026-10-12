@@ -14,3 +14,19 @@
 .field.missing label::after { content: " · missing"; color: #d97706; }
 
 .source-text { white-space: pre-wrap; word-break: break-word; }
+
+.eta { display: inline-flex; align-items: center; border-radius: .375rem; padding: .125rem .5rem; font-size: .75rem; font-weight: 600; white-space: nowrap; }
+.eta-on_time { background: #ecfdf5; color: #047857; }
+.eta-tight { background: #fffbeb; color: #b45309; }
+.eta-late { background: #fef2f2; color: #b91c1c; }
+.eta-no_deadline, .eta-unknown { background: #f1f5f9; color: #475569; }
+
+.timeline-bar { display: flex; height: .75rem; overflow: hidden; border-radius: 9999px; background: #e2e8f0; }
+.seg-loading, .seg-unloading { background: #6366f1; }
+.seg-drive { background: #0ea5e9; }
+.seg-break { background: #f59e0b; }
+.seg-rest { background: #475569; }
+.seg-ban { background: #ef4444; }
+.seg-wait { background: #cbd5e1; }
+.leaflet-container { font-family: inherit; }
+.leaflet-tile-pane { filter: grayscale(.85) brightness(1.04) contrast(.92); }
